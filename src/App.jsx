@@ -132,7 +132,7 @@ const ChangePassword = () => {
   };
   return (
     <div style={height} className="main-content">
-      <h2 className="section-title">CHANGE password</h2>
+      <h2 className="section-title">Change password</h2>
       <div className="form-row">
         <div className="form-group">
           <label>current password</label>
