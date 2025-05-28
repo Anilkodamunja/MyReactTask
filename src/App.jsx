@@ -216,7 +216,7 @@ const App = () => {
             to="/auctions"
             className={({ isActive }) => (isActive ? 'sidebar-button active' : 'sidebar-button')}
           >
-            Wish List
+            Whish List
           </NavLink>
           <NavLink
             to="/change-password"
