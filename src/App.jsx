@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import './App.css';
+
+// Utility function to calculate time remaining until the auction ends
+const calculateTimeRemaining = (endTime) => {
+  const now = new Date();
+  const end = new Date(endTime);
+  const diffMs = end - now;
+
+  if (diffMs <= 0) return 'Auction Ended';
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+  return `${days}D ${hours}H ${minutes}min`;
+};
 
 const ProfileEdit = () => { 
   const Width = {
@@ -50,30 +65,28 @@ const ProfileEdit = () => {
   );
 };
 
-const AuctionList = () => {
-  const auctions = [
-    {
-      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?w=100&auto=format&fit=crop', // BMW car (example car image)
-      product: 'MARUTI GRAND-VITARA-HYBRID-DELTA',
-      lot: '#660',
-      bid: '₹10,000',
-      bids: 0,
-      endsIn: 'MS-JACKSON Auction in 4D 4H 49min',
-      location: 'VIJAYAWADA - A.P',
-    },
-    {
-      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?w=100&auto=format&fit=crop', // Another car image
-      product: 'MARUTI GRAND-VITARA-HYBRID-DELTA',
-      lot: '#660',
-      bid: '₹10,000',
-      bids: 0,
-      endsIn: 'MS-JACKSON Auction in 4D 4H 49min',
-      location: 'VIJAYAWADA - A.P',
-    },
-  ];
+const AuctionList = ({ auctions }) => {
+  const [auctionData, setAuctionData] = useState(auctions);
 
-  // Fallback image URL in case the primary URL fails
+  // Update the countdown every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAuctionData((prevAuctions) =>
+        prevAuctions.map((auction) => ({
+          ...auction,
+          timeRemaining: calculateTimeRemaining(auction.endsIn),
+        }))
+      );
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [auctions]);
+
   const fallbackImage = 'https://dummyimage.com/100x100/ccc/fff.png&text=Car+Image';
+
+  if (!auctions || auctions.length === 0) {
+    return <div className="auction-content">No auctions available.</div>;
+  }
 
   return (
     <div className="auction-content">
@@ -88,7 +101,7 @@ const AuctionList = () => {
           </tr>
         </thead>
         <tbody>
-          {auctions.map((auction, index) => (
+          {auctionData.map((auction, index) => (
             <tr key={index}>
               <td>
                 <img
@@ -98,7 +111,7 @@ const AuctionList = () => {
                   onError={(e) => {
                     console.error(`Failed to load image: ${e.target.src}`);
                     e.target.src = fallbackImage;
-                  }} // Log error and set fallback
+                  }}
                 />
               </td>
               <td>
@@ -112,9 +125,9 @@ const AuctionList = () => {
               <td>{auction.bid}</td>
               <td>{auction.bids}</td>
               <td>
-                <div>{auction.endsIn}</div>
+                <div>{auction.timeRemaining || calculateTimeRemaining(auction.endsIn)}</div>
                 <div className="location">
-                  <span>🌍</span>
+                  <span>📍</span>
                   <span>{auction.location}</span>
                 </div>
               </td>
@@ -153,10 +166,31 @@ const ChangePassword = () => {
 };
 
 const App = () => {
+  // Define auction data in the App component
+  const auctionsData = [
+    {
+      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?w=100&auto=format&fit=crop',
+      product: 'MARUTI GRAND-VITARA-HYBRID-DELTA',
+      lot: '#660',
+      bid: '₹10,000',
+      bids: 0,
+      endsIn: '2025-05-30T12:00:00Z', // May 30, 2025, 12:00 UTC (5:30 PM IST)
+      location: 'VIJAYAWADA - A.P',
+    },
+    {
+      image: 'https://images.pexels.com/photos/116477/pexels-photo-116477.jpeg?w=100&auto=format&fit=crop',
+      product: 'MARUTI GRAND-VITARA-HYBRID-ZETA',
+      lot: '#661',
+      bid: '₹12,000',
+      bids: 2,
+      endsIn: '2025-05-31T15:00:00Z', // May 31, 2025, 15:00 UTC (8:30 PM IST)
+      location: 'HYDERABAD - T.S',
+    },
+  ];
+
   return (
     <Router>
       <div className="app-container">
-        {/* Sidebar */}
         <div className="sidebar">
           <h3 className="sidebar-title">Swipe auctions</h3>
           <NavLink
@@ -171,7 +205,7 @@ const App = () => {
             to="/auctions"
             className={({ isActive }) => (isActive ? 'sidebar-button active' : 'sidebar-button')}
           >
-            Whish List
+            Wish List
           </NavLink>
           <NavLink
             to="/change-password"
@@ -186,11 +220,9 @@ const App = () => {
             Logout
           </NavLink>
         </div>
-
-        {/* Main Content */}
         <Routes>
           <Route path="/profile" element={<ProfileEdit />} />
-          <Route path="/auctions" element={<AuctionList />} />
+          <Route path="/auctions" element={<AuctionList auctions={auctionsData} />} />
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/" element={<ProfileEdit />} />
         </Routes>
@@ -199,7 +231,6 @@ const App = () => {
   );
 };
 
-// Render the App component only in the browser environment
 if (typeof window !== 'undefined' && document.getElementById('root')) {
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
