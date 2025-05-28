@@ -1,0 +1,174 @@
+/* Reset default styles */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* App container */
+.app-container {
+  display: flex;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 200px;
+  background-color: #3b82f6;
+  padding: 20px;
+  color: white;
+  border-radius: 10px 10px 10px 10px;
+  height: 275px;
+  margin-top: 25px;
+  margin: 25px auto 0 27px;
+}
+
+.sidebar-title {
+  margin-bottom: 20px;
+}
+
+.sidebar-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+  text-align: left;
+  background-color: #1e40af;
+  cursor: pointer;
+  border-radius: 5px;
+  text-decoration: none;
+  width: 93%;
+}
+
+/* Style for active sidebar button */
+.sidebar-button.active {
+  background-color: #ffa500;
+  color: #333; /* Change font color for active button */
+}
+
+.sidebar-button:hover {
+  text-decoration: none;
+  background-color: #ffa500;
+  color: white;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #3b82f6;
+  height: 413px;
+  color: white;
+  max-width: 65%;
+  margin: 20px auto 0 auto;
+  border-radius: 10px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Form styles */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  width: 48%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-field {
+  width: 95%;
+  padding: 10px;
+  border: none;
+  background-color: #d3d3d3;
+  color: black;
+  border-radius: 5px;
+}
+
+.half-width {
+  width: 48%;
+}
+
+/* Button styles */
+.update-button {
+  background-color: #ffa500;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  border-radius: 5px;
+}
+
+.update-button:hover {
+  opacity: 0.9;
+}
+
+/* Auction content styles */
+.auction-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.auction-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 320px;
+}
+
+.auction-table th,
+.auction-table td {
+  padding: 10px;
+  text-align: left;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.auction-table th {
+  background-color: #3b82f6;
+  color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.auction-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.auction-image {
+  width: 100px;
+  height: auto;
+}
+
+.action-links {
+  display: flex;
+  align-items: center;
+  color: #4682b4;
+}
+
+.wishlist {
+  margin-right: 5px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  color: #ffa500;
+}
+
+.location span:first-child {
+  margin-right: 5px;
+}
