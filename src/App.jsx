@@ -47,11 +47,11 @@ const ProfileEdit = () => {
       </div>
       <div className="form-row">
         <div className="form-group">
-          <label>LOCATION</label>
+          <label>Location</label>
           <input type="text" className="input-field" />
         </div>
         <div className="form-group">
-          <label>USER TYPE</label>
+          <label>User Type</label>
           <select style={Width} className="input-field">
             <option>User</option>
             <option>Dealer</option>
@@ -66,10 +66,15 @@ const ProfileEdit = () => {
 };
 
 const AuctionList = ({ auctions }) => {
-  const [auctionData, setAuctionData] = useState(auctions);
+  const [auctionData, setAuctionData] = useState(() => 
+    auctions.map(auction => ({
+      ...auction,
+      timeRemaining: calculateTimeRemaining(auction.endsIn)
+    }))
+  );
 
-  // Update the countdown every minute
   useEffect(() => {
+    // Update countdown every minute
     const interval = setInterval(() => {
       setAuctionData((prevAuctions) =>
         prevAuctions.map((auction) => ({
@@ -77,14 +82,14 @@ const AuctionList = ({ auctions }) => {
           timeRemaining: calculateTimeRemaining(auction.endsIn),
         }))
       );
-    }, 60000); // Update every minute
+    }, 60000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, [auctions]);
+    return () => clearInterval(interval);
+  }, []);
 
   const fallbackImage = 'https://dummyimage.com/100x100/ccc/fff.png&text=Car+Image';
 
-  if (!auctions || auctions.length === 0) {
+  if (!auctionData || auctionData.length === 0) {
     return <div className="auction-content">No auctions available.</div>;
   }
 
@@ -125,9 +130,9 @@ const AuctionList = ({ auctions }) => {
               <td>{auction.bid}</td>
               <td>{auction.bids}</td>
               <td>
-                <div>{auction.timeRemaining || calculateTimeRemaining(auction.endsIn)}</div>
+                <div>{auction.timeRemaining}</div>
                 <div className="location">
-                  <span>📍</span>
+                  <span>🌍</span>
                   <span>{auction.location}</span>
                 </div>
               </td>
@@ -144,7 +149,7 @@ const ChangePassword = () => {
     height: '286px'
   };
   return (
-    <div style={height} className="main-content">
+    <div style={height} className="main-content setpassword-Height">
       <h2 className="section-title">Change password</h2>
       <div className="form-row">
         <div className="form-group">
@@ -166,27 +171,33 @@ const ChangePassword = () => {
 };
 
 const App = () => {
-  // Define auction data in the App component
-  const auctionsData = [
+  // Auctions state now managed via useState for dynamic updates
+  const [auctionsData, setAuctionsData] = useState([
     {
       image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?w=100&auto=format&fit=crop',
       product: 'MARUTI GRAND-VITARA-HYBRID-DELTA',
       lot: '#660',
       bid: '₹10,000',
       bids: 0,
-      endsIn: '2025-05-30T12:00:00Z', // May 30, 2025, 12:00 UTC (5:30 PM IST)
+      endsIn: '2025-05-30T12:00:00Z',
       location: 'VIJAYAWADA - A.P',
     },
     {
-      image: 'https://images.pexels.com/photos/116477/pexels-photo-116477.jpeg?w=100&auto=format&fit=crop',
+      image: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?w=100&auto=format&fit=crop',
       product: 'MARUTI GRAND-VITARA-HYBRID-ZETA',
       lot: '#661',
       bid: '₹12,000',
       bids: 2,
-      endsIn: '2025-05-31T15:00:00Z', // May 31, 2025, 15:00 UTC (8:30 PM IST)
+      endsIn: '2025-05-31T15:00:00Z', 
       location: 'HYDERABAD - T.S',
     },
-  ];
+  ]);
+
+  // Example: Function to update auctions dynamically (e.g., fetching from API)
+  // Call this function to update auction data as needed
+  const updateAuctions = (newAuctions) => {
+    setAuctionsData(newAuctions);
+  };
 
   return (
     <Router>
